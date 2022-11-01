@@ -122,6 +122,21 @@ def cal_tf(term, a_doc):
     return math.log(count + 1, 10)
     #return count
 
+
+def max_index(lst):
+    """
+
+    :param lst: 列表
+    :return: 最大值的索引，可能有多个
+    """
+    index = []
+    max_n = max(lst)
+    for i in range(len(lst)):
+        if lst[i] == max_n:
+            index.append(i)
+    return index  #返回一个列表
+
+
 if __name__ == '__main__':
 
     dataset_path = r'F:\workspace\pycharmProjects\IR_VSM\dataset'
@@ -174,7 +189,7 @@ if __name__ == '__main__':
         #print(terms_list)
         terms_list = sorted(terms_list)
         #print(len(terms_list))
-        print(terms_list)
+        #print(terms_list)
         # 测试查询
         #print(cal_tf('i', newdoc[0]))
         #print(file_num)
@@ -188,7 +203,7 @@ if __name__ == '__main__':
             for j in range(1, file_num + 1):
                 tf_2D_arr[i][j] = cal_tf(terms_list[i], newdoc[j-1])
         #查看tf
-        print(tf_2D_arr)
+        #print(tf_2D_arr)
         idf_arr = np.zeros(terms_num)
 
         # 某个词项出现的文档数量， log（N/idf）
@@ -198,20 +213,34 @@ if __name__ == '__main__':
             idf_arr[k] = math.log(file_num/np.count_nonzero(tf_2D_arr[k][1:]), 10)
         #print(idf_arr)
 
+
         # 向量中的每一项用tf*idf来表示
         # 查询向量
-        query_vector = []
+        query_vector = np.array([])
         for i in range(terms_num):
-            query_vector.append(idf_arr[i] * tf_2D_arr[i][0])
+            query_vector = np.append(query_vector, idf_arr[i] * tf_2D_arr[i][0])
         #print(query_vector)
+
         # 文档的查询向量，都存到一个列表中
         docs_vector = []
         for doc_num in range(file_num):
-            doc_vector = []
+            doc_vector = np.array([])
             for i in range(terms_num):
-                doc_vector.append(idf_arr[i] * tf_2D_arr[i][doc_num + 1])
+                doc_vector = np.append(doc_vector, idf_arr[i] * tf_2D_arr[i][doc_num + 1])
             docs_vector.append(doc_vector)
         #print(docs_vector)
+
+        # 计算余弦相似度Cosine similarity
+        docs_cos_sim = []
+        for i in range(file_num):
+            cos_sim = query_vector.dot(docs_vector[i]) / (np.linalg.norm(query_vector)*np.linalg.norm(docs_vector[i]))
+            docs_cos_sim.append(cos_sim)
+
+        max_cos_sim = max(docs_cos_sim)
+        indexes = max_index(docs_cos_sim)
+
+        print(f"{file_num}个文档与查询的余弦相似度为：{docs_cos_sim}" )
+        print(f"相似度最高的文档是第{indexes}个文档，余弦相似度为{max_cos_sim }")
 
 
 
