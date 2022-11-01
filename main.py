@@ -122,7 +122,6 @@ def cal_tf(term, a_doc):
     return math.log(count + 1, 10)
     #return count
 
-
 if __name__ == '__main__':
 
     dataset_path = r'F:\workspace\pycharmProjects\IR_VSM\dataset'
@@ -141,7 +140,8 @@ if __name__ == '__main__':
     poem_name_query = int(input("查询诗名："))
     author_query = int(input("查询作者："))
     content_query =  int(input("查询诗句："))
-    query = input("查询范围输入完成，请输入您的查询词项，如输入多个，请以空格分割。")
+    print("查询范围输入完成")
+    query = input("请输入您的查询词项，如输入多个，请以空格分割:")
     print("--------------------开始查询--------------------------")
 
     if not (poem_name_query or author_query or content_query):
@@ -187,7 +187,20 @@ if __name__ == '__main__':
             tf_2D_arr[i][0] = cal_tf(terms_list[i], query)
             for j in range(1, file_num + 1):
                 tf_2D_arr[i][j] = cal_tf(terms_list[i], newdoc[j-1])
+        #查看tf
         print(tf_2D_arr)
+        idf_arr = np.zeros(terms_num)
+
+        # 某个词项出现的文档数量， log（N/idf）
+        for k in range(terms_num):
+            # tf_2D_arr数组中每一行，非零元素的个数，不算第一列的（那是查询的词项）
+            # idf_arr[k] = np.count_nonzero(tf_2D_arr[k][1:])
+            idf_arr[k] = math.log(file_num/np.count_nonzero(tf_2D_arr[k][1:]), 10)
+        #print(idf_arr)
+
+
+
+
 
 
 
