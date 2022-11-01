@@ -1,16 +1,41 @@
-# 这是一个示例 Python 脚本。
+import os
+class Doc:
+    """
+    用来存储dataset中文档的诗名、作者、诗句
+    """
+    poem_name = None
+    author = None
+    content = None
+    def __init__(self,poem_name):
+        self.poem_name = poem_name
 
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+
+path=r'F:\workspace\pycharmProjects\IR_VSM\dataset'
+file_num = 0
+file_name_list = []
+# 读取文档名到列表，文档数量
+if os.path.exists(path):
+    file_name_list = os.listdir(path)
+    file_num = len(file_name_list)
+    # print(file_num)
+    # print(file_name_list)
+    # print(type(file_name_list[0])) # str类型
+else:
+    print('Error: this path not exist.')
+
+# names = globals()
+doc = []
+for i in range(file_num):
+    # names['doc' + str(i)] = Doc(file_name_list[i])
+    # exec('doc{} = {}'.format(i,Doc(file_name_list[i-1])))
+    # doc.append('doc' + str(i))
+    doc.append(Doc(file_name_list[i]))
+    # remove ".txt"
+    doc[i].poem_name = doc[i].poem_name[:-4]
+    print(doc[i].poem_name)
 
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
 
 
-# 按间距中的绿色按钮以运行脚本。
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+
