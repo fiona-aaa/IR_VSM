@@ -1,5 +1,8 @@
 import os
 import string
+import math
+import numpy as np
+
 
 class Doc:
     """
@@ -80,6 +83,15 @@ def read_files(path):
 
 
 def select_query_scope(doc, file_num, poem_name_query, author_query, content_query):
+    """
+    根据查询范围，将文档的不同部分进行汇总，到一个字符串中
+    :param doc: 文档列表
+    :param file_num: 文档数量
+    :param poem_name_query: 是否查询诗名
+    :param author_query: 是否查询作者
+    :param content_query: 是否查询诗句
+    :return: 根据查询范围重构的查询文档
+    """
     new_doc = []
     for i in range(file_num):
         new_doc.append('')
@@ -91,6 +103,24 @@ def select_query_scope(doc, file_num, poem_name_query, author_query, content_que
             # 可能会导致多几个空格，应该没有影响吧?-----已解决
             new_doc[i] = new_doc[i] + ' ' + doc[i].content
     return new_doc
+
+
+def cal_tf(term, a_doc):
+    """
+
+    :param term: 词项
+    :param a_doc: 文档
+    :return: 词项在文档中出现的次数，加一，取log
+    """
+    count = 0
+    # print(type(a_doc))
+    a_doc = a_doc.split(' ')
+    for t in a_doc:
+        #print(t)
+        if t == term:
+            count += 1
+    return math.log(count + 1, 10)
+    #return count
 
 
 if __name__ == '__main__':
@@ -111,6 +141,8 @@ if __name__ == '__main__':
     poem_name_query = int(input("查询诗名："))
     author_query = int(input("查询作者："))
     content_query =  int(input("查询诗句："))
+    query = input("查询范围输入完成，请输入您的查询词项，如输入多个，请以空格分割。")
+    print("--------------------开始查询--------------------------")
 
     if not (poem_name_query or author_query or content_query):
         print("ERROR: 查询范围为空")
@@ -135,18 +167,27 @@ if __name__ == '__main__':
             #print(term_list)
             terms_list.extend(term_list)
 
-        print(len(terms_list))
+        #print(len(terms_list))
         terms_list = list(set(terms_list))
         terms_num = len(terms_list)
-        print(terms_num)
-        print(terms_list)
+        #print(terms_num)
+        #print(terms_list)
         terms_list = sorted(terms_list)
-        print(len(terms_list))
+        #print(len(terms_list))
         print(terms_list)
-
-
-
-
+        # 测试查询
+        #print(cal_tf('i', newdoc[0]))
+        #print(file_num)
+        # 行数 = 词项的数目
+        # 列数 = 9（文档） + 1（查询）
+        tf_2D_arr = np.zeros((terms_num, file_num + 1))
+        #print(tf_2D_arr)
+        # 循环计算tf数组
+        for i in range(terms_num):
+            tf_2D_arr[i][0] = cal_tf(terms_list[i], query)
+            for j in range(1, file_num + 1):
+                tf_2D_arr[i][j] = cal_tf(terms_list[i], newdoc[j-1])
+        print(tf_2D_arr)
 
 
 
