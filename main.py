@@ -198,6 +198,23 @@ if __name__ == '__main__':
             idf_arr[k] = math.log(file_num/np.count_nonzero(tf_2D_arr[k][1:]), 10)
         #print(idf_arr)
 
+        # 向量中的每一项用tf*idf来表示
+        # 查询向量
+        query_vector = []
+        for i in range(terms_num):
+            query_vector.append(idf_arr[i] * tf_2D_arr[i][0])
+        #print(query_vector)
+        # 文档的查询向量，都存到一个列表中
+        docs_vector = []
+        for doc_num in range(file_num):
+            doc_vector = []
+            for i in range(terms_num):
+                doc_vector.append(idf_arr[i] * tf_2D_arr[i][doc_num + 1])
+            docs_vector.append(doc_vector)
+        #print(docs_vector)
+
+
+
 
 
 
