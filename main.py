@@ -60,7 +60,7 @@ def read_files(path):
                 doc[i].content = doc[i].content + line
             # 去掉换行符
             # author（第一行）也有个换行符，要注意
-            doc[i].author = doc[i].author.replace('\n', ' ')
+            doc[i].author = doc[i].author.replace('\n', '')
             doc[i].content = doc[i].content.replace('\n', ' ')
             # 去掉标点符号
             for c in string.punctuation:
@@ -88,7 +88,7 @@ def select_query_scope(doc, file_num, poem_name_query, author_query, content_que
         if author_query:
             new_doc[i] = new_doc[i] + ' ' + doc[i].author
         if content_query:
-            # 可能会导致多几个空格，应该没有影响吧?
+            # 可能会导致多几个空格，应该没有影响吧?-----已解决
             new_doc[i] = new_doc[i] + ' ' + doc[i].content
     return new_doc
 
@@ -116,7 +116,35 @@ if __name__ == '__main__':
         print("ERROR: 查询范围为空")
     else:
         newdoc = select_query_scope(doc, file_num, poem_name_query, author_query, content_query)
-        print(newdoc[4])
+        # print(newdoc[4])
+        # 对所有文档排序，并统计不同词项的数量
+        terms_num = 0
+        terms_list = []
+        for i in range(file_num):
+            # 解决上面select_query_scope可能多加了空格的问题
+            newdoc[i] = newdoc[i].strip(' ')
+            #print(newdoc[i])
+            term_list = newdoc[i].split(' ')
+            #print(term_list)
+            # 借助集合去重
+            term_list = list(set(term_list))
+            #print(term_list)
+            for item in terms_list:
+                if item == '':
+                    term_list.remove('')
+            #print(term_list)
+            terms_list.extend(term_list)
+
+        print(len(terms_list))
+        terms_list = list(set(terms_list))
+        terms_num = len(terms_list)
+        print(terms_num)
+        print(terms_list)
+        terms_list = sorted(terms_list)
+        print(len(terms_list))
+        print(terms_list)
+
+
 
 
 
