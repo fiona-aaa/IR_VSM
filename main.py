@@ -219,7 +219,7 @@ if __name__ == '__main__':
         query_vector = np.array([])
         for i in range(terms_num):
             query_vector = np.append(query_vector, idf_arr[i] * tf_2D_arr[i][0])
-        print(query_vector)
+        #print(query_vector)
 
         # 文档的查询向量，都存到一个列表中
         docs_vector = []
@@ -228,7 +228,7 @@ if __name__ == '__main__':
             for i in range(terms_num):
                 doc_vector = np.append(doc_vector, idf_arr[i] * tf_2D_arr[i][doc_num + 1])
             docs_vector.append(doc_vector)
-        print(docs_vector)
+        #print(docs_vector)
 
         # 计算余弦相似度Cosine similarity
         docs_cos_sim = []
