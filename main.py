@@ -156,12 +156,12 @@ if __name__ == '__main__':
     author_query = int(input("查询作者："))
     content_query =  int(input("查询诗句："))
     print("查询范围输入完成")
-    query = input("请输入您的查询词项，如输入多个，请以空格分割:")
-    print("--------------------开始查询--------------------------")
 
     if not (poem_name_query or author_query or content_query):
         print("ERROR: 查询范围为空")
     else:
+        query = input("请输入您的查询词项，如输入多个，请以空格分割:")
+        print("--------------------开始查询--------------------------")
         newdoc = select_query_scope(doc, file_num, poem_name_query, author_query, content_query)
         # print(newdoc[4])
         # 对所有文档排序，并统计不同词项的数量
@@ -219,7 +219,7 @@ if __name__ == '__main__':
         query_vector = np.array([])
         for i in range(terms_num):
             query_vector = np.append(query_vector, idf_arr[i] * tf_2D_arr[i][0])
-        #print(query_vector)
+        print(query_vector)
 
         # 文档的查询向量，都存到一个列表中
         docs_vector = []
@@ -228,12 +228,18 @@ if __name__ == '__main__':
             for i in range(terms_num):
                 doc_vector = np.append(doc_vector, idf_arr[i] * tf_2D_arr[i][doc_num + 1])
             docs_vector.append(doc_vector)
-        #print(docs_vector)
+        print(docs_vector)
 
         # 计算余弦相似度Cosine similarity
         docs_cos_sim = []
         for i in range(file_num):
-            cos_sim = query_vector.dot(docs_vector[i]) / (np.linalg.norm(query_vector)*np.linalg.norm(docs_vector[i]))
+            num1 = query_vector.dot(docs_vector[i])
+            num2 = np.linalg.norm(query_vector) * np.linalg.norm(docs_vector[i])
+            #cos_sim = query_vector.dot(docs_vector[i]) / (np.linalg.norm(query_vector)*np.linalg.norm(docs_vector[i]))
+            if num2 == 0:
+                cos_sim = 0.0
+            else:
+                cos_sim = num1 / num2
             docs_cos_sim.append(cos_sim)
 
         max_cos_sim = max(docs_cos_sim)
