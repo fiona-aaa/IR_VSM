@@ -144,7 +144,8 @@ for doc_num in range(file_num):
         doc_vector = np.append(doc_vector, idf_arr[i] * tf_2D_arr[i][doc_num + 1])
         docs_vector.append(doc_vector)
  ```
-根据余弦相似度的公式来计算。其中`numpy.dot()`函数可以计算两个向量的内积，`numpy.linalg.norm()`函数返回向量的模。
+根据余弦相似度的公式来计算。
+`numpy.dot()`函数可以计算两个向量的内积，`numpy.linalg.norm()`函数返回向量的模。
   ```python
  # 计算余弦相似度Cosine similarity
 docs_cos_sim = []
