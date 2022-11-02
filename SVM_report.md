@@ -150,7 +150,12 @@ for doc_num in range(file_num):
  # 计算余弦相似度Cosine similarity
 docs_cos_sim = []
 for i in range(file_num):
-    cos_sim = query_vector.dot(docs_vector[i]) / (np.linalg.norm(query_vector) * np.linalg.norm(docs_vector[i]))
+    num1 = query_vector.dot(docs_vector[i])
+    num2 = np.linalg.norm(query_vector) * np.linalg.norm(docs_vector[i])
+    if num2 == 0:
+        cos_sim = 0.0
+    else:
+        cos_sim = num1 / num2
     docs_cos_sim.append(cos_sim)
  ```
 每个文档关于查询的余弦相似度都存在列表`docs_cos_sim`中，使用`max()`函数可以得到最大的余弦相似度，然后遍历`docs_cos_sim`，就可求得余弦相似度最高的文档。
