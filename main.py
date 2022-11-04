@@ -79,7 +79,7 @@ def read_files(path):
             # print(doc[i].author)
             # print(doc[i].content)
         i += 1
-    return doc, file_num
+    return doc, file_num, file_name_list
 
 
 def select_query_scope(doc, file_num, poem_name_query, author_query, content_query):
@@ -140,7 +140,7 @@ def max_index(lst):
 if __name__ == '__main__':
 
     dataset_path = r'F:\workspace\pycharmProjects\IR_VSM\dataset'
-    doc, file_num = read_files(dataset_path)
+    doc, file_num, file_name_list = read_files(dataset_path)
     """
     print(file_num)
     print(doc[2].poem_name)
@@ -244,9 +244,12 @@ if __name__ == '__main__':
 
         max_cos_sim = max(docs_cos_sim)
         indexes = max_index(docs_cos_sim)
-
+        # 求诗名
+        poem_names = []
+        for i in indexes:
+            poem_names.append(file_name_list[i])
         print(f"{file_num}个文档与查询的余弦相似度为：{docs_cos_sim}" )
-        print(f"相似度最高的文档是第{indexes}个文档，余弦相似度为{max_cos_sim }")
+        print(f"相似度最高的文档是第{indexes}个文档\n诗名为{poem_names}\n余弦相似度为{max_cos_sim }")
 
 
 
